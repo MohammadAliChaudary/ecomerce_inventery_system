@@ -1,0 +1,104 @@
+.testbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+  flex-shrink: 0;
+  padding: 20px;
+}
+
+.testbox > form {
+  flex-shrink: 0;
+  padding: 20px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 0 20px 0 #333;
+  width: 100%;
+  height: 100%;
+}
+
+.banner {
+  position: relative;
+  height: 410px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.banner::after {
+  content: "";
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.testbox > form > input,
+.testbox > form > textarea,
+.testbox > form > select {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.testbox > form > input {
+  width: calc(100% - 10px);
+  padding: 5px;
+}
+
+.testbox > form > select {
+  width: 100%;
+  padding: 7px 0;
+  background: transparent;
+}
+
+.testbox > form > textarea {
+  width: calc(100% - 12px);
+  padding: 5px;
+}
+
+.testbox > form > input:hover::placeholder {
+  color: #333;
+}
+
+.item input:hover {
+  border: 1px solid transparent;
+  box-shadow: 0 0 6px 0 #333;
+  color: #333;
+}
+
+.item {
+  position: relative;
+  margin: 10px 0;
+}
+
+.btn-block {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.btn-block > button {
+  width: 150px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #444;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-block > button:hover {
+  background: #666;
+}
+
+.name-item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.name-item input {
+  width: calc(50% - 20px);
+}
