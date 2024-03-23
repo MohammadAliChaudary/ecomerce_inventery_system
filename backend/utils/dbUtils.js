@@ -123,7 +123,20 @@ const getCustomerInfo = (user_id) => {
 
 const checkCartTable = (id) => {
   return new Promise((resolve, reject) => {
-    const query = "SELECT * FROM cart ";
+    const query = "SELECT * FROM cart WHERE product_id = ?";
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        return reject(err);
+      } else {
+        return resolve(result);
+      }
+    });
+  });
+};
+
+const getSingleUserProducts = (id) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM product WHERE user_id = ?";
     db.query(query, [id], (err, result) => {
       if (err) {
         return reject(err);
@@ -145,4 +158,5 @@ module.exports = {
   getCartData,
   getCustomerInfo,
   checkCartTable,
+  getSingleUserProducts,
 };

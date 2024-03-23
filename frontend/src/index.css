@@ -68,7 +68,6 @@ body {
 
 .navigation ul li:nth-child(1) {
   margin-bottom: 40px;
-  pointer-events: none;
 }
 
 .navigation ul li a {
@@ -132,6 +131,22 @@ body {
   border-radius: 50%;
   box-shadow: 35px -35px 0 10px var(--white);
   pointer-events: none;
+}
+
+.navigation ul li:nth-child(1):hover a,
+.navigation ul li:nth-child(1).hovered a {
+  background-color: var(--blue) !important;
+  color: var(--white);
+}
+
+.navigation ul li:nth-child(1):hover a::before,
+.navigation ul li:nth-child(1).hovered a::before {
+  display: none !important;
+}
+
+.navigation ul li:nth-child(1):hover a::after,
+.navigation ul li:nth-child(1).hovered a::after {
+  display: none !important;
 }
 
 /* ===================== Main ===================== */

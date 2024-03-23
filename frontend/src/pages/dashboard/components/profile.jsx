@@ -9,14 +9,15 @@ import ErrorHandler from "../../../components/errorHandler";
 import SuccessMessageHandler from "../../../components/succeesMessageHandler";
 import { SuspenseLoader } from "../../../App";
 import Loader from "../../../components/Loader";
+import useFetchUserProduct from "../../../services/productHandler/useFetchUserProducts";
+import ProductsRow from "./productsRow";
 
 const profile = () => {
   const [stats, setStats] = useState([]);
   const [products, setProducts] = useState([]);
   const { auth } = useAuth();
-  const getYourProductApi = `product/${auth.user[0].user_id}`;
-  const [read, setRead] = useState(null);
-  const [edit, setEdit] = useState(null);
+  const userId = auth.user[0].user_id;
+
   const { error } = useError();
   const [quantity, setQuntity] = useState(0);
   const { success } = useSuccess();
@@ -24,31 +25,9 @@ const profile = () => {
   const [earning, setEarning] = useState(0);
   const [sales, setSales] = useState(0);
 
-  const deleteProduct = async (product_id) => {
-    setLoader(true);
-    const api = `product/${product_id}`;
-    try {
-      const res = await axiosPrivate.delete(api);
-    } catch (error) {
-    } finally {
-      await getYourProducts();
-      setLoader(false);
-    }
-  };
-
-  const getYourProducts = async () => {
-    setLoader(true);
-    try {
-      const res = await axiosPrivate.get(getYourProductApi);
-      if (res.status === 200) {
-        setProducts(res.data.data);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoader(false);
-    }
-  };
+  useEffect(() => {
+    getStats();
+  }, []);
 
   const getStats = async () => {
     setLoader(true);
@@ -73,7 +52,7 @@ const profile = () => {
       setEarning(earning);
       setSales(sale);
     });
-  }, [sales, earning, stats, deleteProduct]);
+  }, [sales, earning, stats]);
 
   useEffect(() => {
     let value = 0;
@@ -81,38 +60,14 @@ const profile = () => {
       value = parseInt(item.product_quantity || item.quantity) + value;
       setQuntity(value - sales);
     });
-  }, [products, quantity, sales, deleteProduct]);
-
-  useEffect(() => {
-    getYourProducts();
-    getStats();
-  }, []);
+  }, [products, quantity, sales]);
 
   return (
     <>
       {loader ? <SuspenseLoader /> : null}
       {error !== "" ? <ErrorHandler /> : null}
       {success !== "" ? <SuccessMessageHandler /> : null}
-      {read !== null ? (
-        <ReadOnlyForm
-          name={read.name}
-          desc={read.desc}
-          price={read.price}
-          quantity={read.quantity}
-          setRead={setRead}
-        />
-      ) : null}
-      {edit !== null ? (
-        <EditProductsForm
-          name={edit.name}
-          desc={edit.desc}
-          price={edit.price}
-          quantity={edit.quantity}
-          product_id={edit.product_id}
-          setEdit={setEdit}
-          getYourProducts={getYourProducts}
-        />
-      ) : null}
+
       <div className="main">
         <div className="topbar">
           <div className="toggle">
@@ -165,75 +120,7 @@ const profile = () => {
             </div>
           </div>
         </div>
-
-        <div className="details">
-          <div className="recentOrders">
-            <div className="cardHeader">
-              <h2>Order List</h2>
-              <a href="#" className="btn">
-                View All
-              </a>
-            </div>
-
-            <table>
-              <thead>
-                <tr>
-                  <td>Name</td>
-                  <td>Description</td>
-                  <td>Price</td>
-                  <td>Total Quantity</td>
-
-                  <td>Actions</td>
-                </tr>
-              </thead>
-
-              <tbody>
-                {products.map((data, i) => (
-                  <tr key={i}>
-                    <td>{data.product_name}</td>
-                    <td>{data.product_desc}</td>
-                    <td>${data.price}</td>
-                    <td>{data.product_quantity || data.quantity}</td>
-                    <td>
-                      <span
-                        onClick={() => {
-                          setRead({
-                            name: data.product_name,
-                            desc: data.product_desc,
-                            price: data.price,
-                            quantity: data.product_quantity || data.quantity,
-                          });
-                        }}
-                      >
-                        <ion-icon name="reader-outline"></ion-icon>
-                      </span>
-                      <span
-                        onClick={() => {
-                          setEdit({
-                            name: data.product_name,
-                            desc: data.product_desc,
-                            price: data.price,
-                            quantity: data.quantity || data.product_quantity,
-                            product_id: data.product_id,
-                          });
-                        }}
-                      >
-                        <ion-icon name="create-outline"></ion-icon>
-                      </span>
-                      <span
-                        onClick={() => {
-                          deleteProduct(data.product_id);
-                        }}
-                      >
-                        <ion-icon name="trash-outline"></ion-icon>
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <ProductsRow />
       </div>
     </>
   );

@@ -10,10 +10,10 @@ const SideBar = () => {
       path: "profile",
     },
     {
-      name: "Add product",
+      name: "Manage Poducts",
       icon: <ion-icon name="add-outline"></ion-icon>,
       logout: false,
-      path: "add-product",
+      path: "manage-product",
     },
     {
       name: "Customers",

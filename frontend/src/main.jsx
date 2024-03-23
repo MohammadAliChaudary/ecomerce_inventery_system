@@ -8,15 +8,15 @@ import { AuthProvider } from "./context/authProvider.jsx";
 import { SuccessProvider } from "./context/successMessageProvider.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <SuccessProvider>
-        <AuthProvider>
-          <ErrorProvider>
-            <App />
-          </ErrorProvider>
-        </AuthProvider>
-      </SuccessProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <SuccessProvider>
+      <AuthProvider>
+        <ErrorProvider>
+          <App />
+        </ErrorProvider>
+      </AuthProvider>
+    </SuccessProvider>
+  </BrowserRouter>
+  /* </React.StrictMode> */
 );

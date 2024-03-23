@@ -22,25 +22,42 @@ const addProduct = (req, res, next) => {
 
 const getSingleUserProduct = async (req, res, next) => {
   const { id } = req.params;
+  let ids;
+  let singleUserProductsData = [];
 
-  const isCart = await dbUtils.checkCartTable(id);
+  const products = await dbUtils.getSingleUserProducts(id);
 
-  console.log();
+  for (const product of products) {
+    const cartProducts = await dbUtils.checkCartTable(product.product_id);
+    let quantity = 0;
 
-  const query = "SELECT * FROM product WHERE user_id = ?";
+    ids = product.product_id;
 
-  // console.log(product_id);
-  // console.log(id);
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      return next(err);
+    for (const cartProduct of cartProducts) {
+      if (ids === cartProduct.product_id) {
+        quantity = parseInt(cartProduct.quantity) + parseInt(quantity);
+      }
+    }
+
+    if (cartProducts.length === 0) {
+      singleUserProductsData.push({
+        ...product,
+        cart_quantity: 0,
+        available_quantity: parseInt(product.quantity),
+      });
     } else {
-      return res.json({
-        status: "success",
-        message: "Your products",
-        data: result,
+      singleUserProductsData.push({
+        ...product,
+        cart_quantity: quantity,
+        available_quantity: parseInt(product.quantity) - quantity,
       });
     }
+  }
+
+  return res.json({
+    status: "success",
+    message: "Your products",
+    data: singleUserProductsData,
   });
 };
 
@@ -54,7 +71,7 @@ const updateProduct = (req, res, next) => {
   if (Object.keys(data).length === 0) {
     const err = {
       status: 500,
-      message: "Please change the data to update it",
+      message: "You have changed nothing in data",
     };
     return next(err);
   }
